@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
-import Persons from './components/Persons'
+import PersonsList from './components/PersonsList'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
 
@@ -58,6 +58,22 @@ const App = () => {
       })
   }
 
+  const handleDeleteOf = (id) => {
+    const toBeDeletedPerson = persons.find(p => p.id === id)
+    const result = window.confirm(`Delete ${toBeDeletedPerson.name} ?`)
+
+    if (result) {
+      personService
+        .remove(id)
+        .then(removedPerson => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+        .catch(error => {
+          alert(`Sorry. User not found`)
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -70,7 +86,10 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} />
+      <PersonsList
+        persons={persons}
+        newFilter={newFilter}
+        handleDeleteOf={handleDeleteOf} />
     </div>
   )
 }
