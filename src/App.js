@@ -33,6 +33,10 @@ const App = () => {
     event.preventDefault()
     const trimmedName = newName.trim()
     const trimmedNumber = newNumber.trim()
+    const personObject = {
+      name: trimmedName,
+      number: trimmedNumber,
+    }
 
     if (trimmedName === '' || trimmedNumber === '') {
       alert('Please enter both the fields')
@@ -40,13 +44,21 @@ const App = () => {
     }
 
     if (persons.map(person => person.name).indexOf(trimmedName) !== -1) {
-      alert(`${trimmedName} is already added to phonebook`)
-      return
-    }
+      const result = window.confirm(`${trimmedName} is already added to phonebook, replace the old number with the new one?`)
 
-    const personObject = {
-      name: trimmedName,
-      number: trimmedNumber,
+      if (result) {
+        const person = persons.find(person => person.name === trimmedName)
+
+        personService
+          .update(personObject, person.id)
+          .then(returnedPerson => {
+            console.log(returnedPerson)
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+      return
     }
     personService
       .create(personObject)
