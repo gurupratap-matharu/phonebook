@@ -14,16 +14,24 @@ code {
 
 .errorMessage {
   color: red;
-  font-size: larger;
-  border-radius: 10px;
+  background: lightgray;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
   border-color: red;
-  font-style: italic;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .notificationMessage {
   color: green;
-  font-size: larger;
-  border-radius:50px;
+  background: lightgray;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
   border-color: green;
-  font-style: italic;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
