@@ -3,12 +3,16 @@ import Filter from './components/Filter'
 import PersonsList from './components/PersonsList'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import Error from './components/Error'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -63,8 +67,11 @@ const App = () => {
     personService
       .create(personObject)
       .then(returnedPerson => {
-        console.log(returnedPerson)
         setPersons(persons.concat(returnedPerson))
+        setNotificationMessage(`${returnedPerson.name} has been added to the phonebook.`)
+        setTimeout(() => {
+          setNotificationMessage(null, 5000)
+        }, 5000)
         setNewName('')
         setNewNumber('')
       })
@@ -79,9 +86,17 @@ const App = () => {
         .remove(id)
         .then(removedPerson => {
           setPersons(persons.filter(p => p.id !== id))
+          setNotificationMessage(`${toBeDeletedPerson.name} has been deleted.`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
         .catch(error => {
-          alert(`Sorry. User not found`)
+          setErrorMessage(`Sorry. User not found`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== id))
         })
     }
   }
@@ -97,12 +112,14 @@ const App = () => {
         handleNumberChange={handleNumberChange}
         newNumber={newNumber}
       />
+      <Notification notificationMessage={notificationMessage} />
+      <Error errorMessage={errorMessage} />
       <h2>Numbers</h2>
       <PersonsList
         persons={persons}
         newFilter={newFilter}
         handleDeleteOf={handleDeleteOf} />
-    </div>
+    </div >
   )
 }
 
